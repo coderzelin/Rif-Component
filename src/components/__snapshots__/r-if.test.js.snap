@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`测试Rif组件 测试组件的UI状态 1`] = `
+<div>
+  <div
+    className="test"
+  >
+    xxx
+  </div>
+</div>
+`;
