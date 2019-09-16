@@ -1,68 +1,153 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Rif 组件
+### 背景
+在react中因为jsx的语法，一般通过某条件判断是否渲染组件一般是通过`this.state.xxx ? <A/> : <B/>` 这样看起来虽然也挺简洁的，但是如果是需要多层判断的话是不是就很麻烦了🤦‍，例如这样
+```
+this.state.xxx 
+  ?  <A /> : this.state.yyy 
+    ?  <B /> : this.state.aaa
+      ?  <C /> : null
 
-## Available Scripts
+```
+这样写的话虽然自己写着很爽，但是别人看你的代码的话就很想打人....所以这个Rif的组件就是解决这个问题的。
 
-In the project directory, you can run:
+---
 
-### `npm start`
+### 如何使用
+1.这个组件的用法类似vue的v-if，这个组件接收三个属性if、else_if、else,下面这两个是最简单的用法，也是用的最多的
+```
+import * as React from 'react'
+import Rif from 'Rif'
+import A from './A'
+import B from './B'
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+class Test extends React.Component<any,any> {
+  render() {
+    return (
+      <div>
+        <Rif if={true}>
+          <A />
+        </Rif>
+      </div>
+    )
+  }
+}
+export default Test
+```
+👆如果if为true(任何真值)的话就会渲染组件A，为false的话就不会渲染组件A
+```
+import * as React from 'react'
+import Rif from 'Rif'
+import A from './A'
+import B from './B'
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+class Test extends React.Component<any,any> {
+  render() {
+    return (
+      <div>
+        <Rif if={true}>
+          <A />
+        </Rif>
+        <Rif else>
+          <B />
+        </Rif>
+      </div>
+    )
+  }
+}
+export default Test
+```
+👆当if的值为true(包括任何真值)的话，就会渲染组件A，而不会渲染组件B，如果if的值为false的话，就会渲染组件B而不会渲染组件A
 
-### `npm test`
+2.下面这个用法是包括else_if
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+import * as React from 'react'
+import Rif from 'Rif'
+import A from './A'
+import B from './B'
+import C from './C'
 
-### `npm run build`
+class Test extends React.Component<any,any> {
+  render() {
+    return (
+      <div>
+        <Rif if={false}>
+          <A />
+        </Rif>
+        <Rif else_if={true}>
+          <B />
+        </Rif>
+        <Rif else>
+          <C />
+        </Rif>
+      </div>
+    )
+  }
+}
+export default Test
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+像👆这种情况的话就会渲染组件B，而不会渲染组件A和C
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 注意事项
+**❌下面这三种用法都是错误的**
 
-### `npm run eject`
+**⚠️这个组件必须包含if、else_if、else三个属性之一**
+```
+import * as React from 'react'
+import Rif from 'Rif'
+import A from './A'
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+class Test extends React.Component<any,any> {
+  render() {
+    return (
+      <div>
+        <Rif>
+          <A />
+        </Rif>
+      </div>
+    )
+  }
+}
+export default Test
+```
+**⚠️包含else_if属性的组件必须紧跟包含if属性的组件后面**
+```
+import * as React from 'react'
+import Rif from 'Rif'
+import A from './A'
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+class Test extends React.Component<any,any> {
+  render() {
+    return (
+      <div>
+        <Rif else_if={true}>
+          <A />
+        </Rif>
+      </div>
+    )
+  }
+}
+export default Test
+```
+**⚠️包含else属性的组件必须紧跟包含if属性的组件后面或者else_if属性后面**
+```
+import * as React from 'react'
+import Rif from 'Rif'
+import A from './A'
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+class Test extends React.Component<any,any> {
+  render() {
+    return (
+      <div>
+        <Rif else>
+          <A />
+        </Rif>
+      </div>
+    )
+  }
+}
+export default Test
+```
